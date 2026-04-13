@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAMSO — Site Officiel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dark: #8b6914;
+    --bg: #070707;
+    --bg2: #0f0f0f;
+    --bg3: #161616;
+    --bg4: #1c1c1c;
+    --border: #242424;
+    --border2: #2e2e2e;
+    --text: #f0ece4;
+    --text2: #a09a90;
+    --text3: #5a5550;
+    --red: #c0392b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* ═══════════════════════════
+     LOGIN SCREEN
+  ═══════════════════════════ */
+  #login {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 500; gap: 0;
+  }
+
+  .login-bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 22vw, 320px);
+    color: rgba(201,168,76,0.04);
+    letter-spacing: -8px;
+    user-select: none;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .login-inner {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 40px;
+  }
+
+  .login-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 12vw, 120px);
+    letter-spacing: 16px;
+    color: var(--text);
+    line-height: 1;
+    text-align: center;
+  }
+  .login-logo em {
+    font-style: normal;
+    color: var(--gold);
+    border-bottom: 3px solid var(--gold);
+  }
+
+  .login-tagline {
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-top: -32px;
+    text-align: center;
+  }
+
+  .login-box {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 36px 40px;
+    width: 360px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  .login-box-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text3);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .login-input-wrap { position: relative; }
+
+  .login-input-wrap input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: var(--text);
+    text-align: center;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .login-input-wrap input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  }
+
+  .login-btn {
+    width: 100%;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .login-btn:hover { background: var(--gold-light); }
+  .login-btn:active { transform: scale(0.98); }
+
+  .login-error {
+    min-height: 18px;
+    font-size: 12px;
+    color: #e05252;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  .login-hint {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    line-height: 1.7;
+  }
+  .login-hint strong { color: var(--gold); font-weight: 500; }
+
+  .login-lines {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 8px;
+  }
+  .login-line {
+    width: 40px; height: 1px;
+    background: var(--border2);
+  }
+  .login-line.gold { background: var(--gold); width: 20px; }
+
+  /* ═══════════════════════════
+     MAIN SITE
+  ═══════════════════════════ */
+  #site { display: none; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(7,7,7,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0 32px; height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 6px;
+    color: var(--text);
+  }
+  .nav-logo em { font-style: normal; color: var(--gold); }
+
+  .nav-links {
+    display: flex; gap: 2px;
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    background: none; border: none;
+    color: var(--text3);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 2px;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    text-transform: uppercase;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); background: var(--bg3); }
+  .nav-btn.active { color: var(--gold); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 480px;
+    display: flex; align-items: flex-end;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-bg-name {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 18vw, 280px);
+    color: rgba(201,168,76,0.05);
+    right: -20px; bottom: -20px;
+    letter-spacing: -8px;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .hero-gold-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 60px 48px 48px;
+    max-width: 720px;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 120px);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .hero-name .gold { color: var(--gold); }
+
+  .hero-real {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .htag {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .hero-quote {
+    font-size: 15px;
+    color: var(--text2);
+    font-style: italic;
+    line-height: 1.75;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  .hero-stats {
+    display: flex; gap: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .hstat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 2px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hstat-label {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    color: var(--text);
+    margin-bottom: 36px;
+    line-height: 1;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card:hover { border-color: var(--border2); }
+
+  .card-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .card-body {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .card-body strong { color: var(--text); font-weight: 500; }
+
+  /* ─── INFO TABLE ─── */
+  .itab { width: 100%; border-collapse: collapse; }
+  .itab tr { border-bottom: 1px solid var(--border); }
+  .itab tr:last-child { border-bottom: none; }
+  .itab td { padding: 13px 0; font-size: 14px; vertical-align: top; }
+  .itab td:first-child { color: var(--text3); width: 42%; font-size: 12px; letter-spacing: 1px; padding-right: 16px; }
+  .itab td:last-child { color: var(--text); font-weight: 400; }
+
+  /* ─── ALBUMS ─── */
+  .albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .album-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .album-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold-dark);
+  }
+  .album-cover {
+    height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: -1px;
+    position: relative; overflow: hidden;
+  }
+  .album-cover-text {
+    position: relative; z-index: 2;
+    text-align: center; line-height: 1.1;
+    padding: 16px;
+  }
+  .album-info { padding: 16px; }
+  .album-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .album-year { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .album-cert {
+    font-size: 10px; color: var(--gold);
+    margin-top: 6px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ─── TIMELINE ─── */
+  .tl { position: relative; padding-left: 36px; }
+  .tl::before {
+    content: '';
+    position: absolute; left: 11px; top: 8px; bottom: 8px;
+    width: 1px; background: var(--border2);
+  }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-dot {
+    position: absolute; left: -29px; top: 5px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--gold-dark);
+  }
+  .tl-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 3px;
+    color: var(--gold); margin-bottom: 4px;
+  }
+  .tl-text {
+    font-size: 14px; color: var(--text2);
+    line-height: 1.75;
+  }
+  .tl-text strong { color: var(--text); font-weight: 500; }
+
+  /* ─── COLLAB GRID ─── */
+  .collab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* ─── SECRET CARDS ─── */
+  .secret-card {
+    background: var(--bg2);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .secret-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+  .secret-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .secret-title {
+    font-size: 16px; font-weight: 700;
+    color: var(--text); margin-bottom: 10px;
+  }
+  .secret-body {
+    font-size: 14px; color: var(--text2);
+    line-height: 1.8;
+  }
+  .secret-body strong { color: var(--gold); font-weight: 500; }
+
+  /* ─── PHOTO GRID ─── */
+  .photo-hero {
+    width: 100%; height: 420px;
+    object-fit: cover; object-position: top center;
+    border-radius: 14px; border: 1px solid var(--border);
+    margin-bottom: 16px;
+    background: var(--bg2);
+    display: block;
+  }
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .photo-item {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+  }
+  .photo-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top center;
+    display: block;
+  }
+  .photo-placeholder-inner {
+    text-align: center; padding: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  /* ─── MISC ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 700px) {
+    nav { padding: 0 16px; }
+    .hero-content { padding: 40px 24px 36px; }
+    .hero-stats { gap: 24px; }
+    .section-inner { padding: 32px 20px 60px; }
+    .collab-grid { grid-template-columns: 1fr; }
+    .photo-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .albums-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-btn { font-size: 10px; padding: 8px 10px; letter-spacing: 1px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login">
+  <div class="login-bg-text">DAMSO</div>
+  <div class="login-inner">
+    <div>
+      <div class="login-logo">DAM<em>SO</em></div>
+      <div class="login-tagline">Accès Restreint — Zone Privée</div>
+    </div>
+    <div class="login-lines">
+      <div class="login-line"></div>
+      <div class="login-line gold"></div>
+      <div class="login-line"></div>
+    </div>
+    <div class="login-box">
+      <div class="login-box-title">Entrez le mot de passe</div>
+      <div class="login-input-wrap">
+        <input type="password" id="pwd" placeholder="••••••••••••" maxlength="30"
+          onkeydown="if(event.key==='Enter')login()" autofocus />
+      </div>
+      <div class="login-error" id="err"></div>
+      <button class="login-btn" onclick="login()">ENTRER →</button>
+      <div class="login-hint">
+        Indice : son <strong>vrai prénom</strong> suivi de son <strong>année de naissance</strong><br>
+        <span style="color:var(--text3);font-size:10px;">(tout en minuscules, sans espace)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SITE ═══ -->
+<div id="site">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">DAM<em>SO</em></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="show('bio',this)">Biographie</button>
+      <button class="nav-btn" onclick="show('discog',this)">Discographie</button>
+      <button class="nav-btn" onclick="show('timeline',this)">Chronologie</button>
+      <button class="nav-btn" onclick="show('collabs',this)">Collaborations</button>
+      <button class="nav-btn" onclick="show('secrets',this)">Infos Cachées</button>
+      <button class="nav-btn" onclick="show('photos',this)">Photos</button>
+      <button class="nav-btn" onclick="show('polémiques',this)">Polémiques</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-gold-bar"></div>
+    <div class="hero-bg-name">DAMSO</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Rappeur · Beatmaker · Auteur-compositeur</div>
+      <div class="hero-name">DAM<span class="gold">SO</span></div>
+      <div class="hero-real">William Kalubi Mwamba — Né le 10 mai 1992</div>
+      <div class="hero-tags">
+        <span class="htag">Belgo-Congolais</span>
+        <span class="htag">Bruxelles</span>
+        <span class="htag">Label TheVie</span>
+        <span class="htag">92i Alumni</span>
+        <span class="htag">#1 Spotify FR</span>
+      </div>
+      <div class="hero-quote">
+        « J'ai planifié les titres de mes albums avant même le début de ma carrière — chaque nom représente une étape psychologique que j'avais anticipée. »
+      </div>
+      <div class="hero-stats">
+        <div><div class="hstat-num">5</div><div class="hstat-label">Albums Studio</div></div>
+        <div><div class="hstat-num">14M</div><div class="hstat-label">Streams en 1 jour</div></div>
+        <div><div class="hstat-num">33</div><div class="hstat-label">Ans</div></div>
+        <div><div class="hstat-num">1.92m</div><div class="hstat-label">Taille</div></div>
+        <div><div class="hstat-num">~5M€</div><div class="hstat-label">Fortune estimée</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BIO ═══ -->
+  <div class="section active" id="s-bio">
+    <div class="section-inner">
+      <div class="section-eyebrow">Qui est-il vraiment</div>
+      <div class="section-title">BIOGRAPHIE</div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-label">Identité Complète</div>
+          <table class="itab">
+            <tr><td>Vrai nom</td><td>William Kalubi Mwamba</td></tr>
+            <tr><td>Date de naissance</td><td>10 mai 1992</td></tr>
+            <tr><td>Lieu de naissance</td><td>Kinshasa, RDC</td></tr>
+            <tr><td>Nationalité</td><td>Belgo-Congolaise</td></tr>
+            <tr><td>Surnom</td><td>"Dems"</td></tr>
+            <tr><td>Signe astro</td><td>Taureau ♉</td></tr>
+            <tr><td>Taille</td><td>1,92 m</td></tr>
+            <tr><td>Résidence</td><td>Bruxelles, Belgique</td></tr>
+            <tr><td>Fortune estimée</td><td>~5 millions €</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-label">Famille & Origines</div>
+          <table class="itab">
+            <tr><td>Père</td><td>Cardiologue (RDC)</td></tr>
+            <tr><td>Mère</td><td>Sociologue (RDC)</td></tr>
+            <tr><td>Grand frère</td><td>Michka (alias Michkavie) — l'a initié au rap</td></tr>
+            <tr><td>Fils</td><td>Lior, né en janvier 2017</td></tr>
+            <tr><td>Mère de Lior</td><td>Identité non révélée (séparé)</td></tr>
+            <tr><td>Ex (2022)</td><td>Didi-Stone</td></tr>
+            <tr><td>Compagne (2025)</td><td>Milla Lapidus</td></tr>
+            <tr><td>Arrivée en Belgique</td><td>2001 — à 9 ans (guerre en RDC)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Enfance & Exil</div>
+        <div class="card-title">De Kinshasa à Bruxelles</div>
+        <div class="card-body">
+          Né dans une famille aisée de Kinshasa — son père est cardiologue, sa mère sociologue — William Kalubi grandit dans un foyer cultivé. La guerre civile qui déchire la <strong>République Démocratique du Congo</strong> force la famille à tout quitter. À 9 ans, il s'installe à <strong>Kraainem</strong>, en périphérie de Bruxelles. Ce déracinement, cette double identité entre le Congo et la Belgique, cette sensation d'être entre deux mondes, marqueront profondément son écriture pour toujours. Il commence le rap en 2006, à seulement 14 ans, avec son groupe <strong>O.P.G (Original Player Gansta)</strong>, fondé avec son ami Dolfa, auquel s'ajoutent Rex, Lio Brown et Duke. Il évoque peu après avoir brièvement suivi des études en marketing avant de tout miser sur la musique.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Style artistique</div>
+        <div class="card-title">Une plume à part dans le rap francophone</div>
+        <div class="card-body">
+          Damso se distingue par un rap <strong>mélancolique, anxieux et introspectif</strong>. Sa plume mêle poésie africaine, réalisme brut, figures de style novatrices et références philosophiques (cf. "Ipséité"). Il aborde sans filtre la spiritualité, l'immigration, la condition masculine, la trahison, l'amour obsessionnel et sa double identité culturelle. Ses productions sombres — trap minimaliste, sonorités mélancoliques, orchestrations — ont redéfini les codes du rap francophone. Il est aussi <strong>beatmaker et compositeur</strong> pour d'autres artistes : Louane, Kendji Girac, Angèle, Shay, Shayet.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Vie privée</div>
+        <div class="card-title">La discrétion comme bouclier</div>
+        <div class="card-body">
+          Damso est l'un des artistes les plus secrets de sa génération. Son fils <strong>Lior</strong>, né en janvier 2017, est évoqué dans "Deux toiles de mer" (QALF), avec une note vocale de l'enfant dans le morceau. Il est séparé de la mère de Lior. En 2022, il est en couple avec Didi-Stone. En <strong>2025</strong>, il officialise sa relation avec <strong>Milla Lapidus</strong> — fille du couturier Olivier Lapidus et petite-fille de Véronique Zuber (Miss France 1955). Sa mère a été placée dans le coma fin 2019, ce qui a repoussé la sortie de QALF. Il a également rendu hommage à sa tante décédée du Covid-19 en mars 2020.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Engagement</div>
+        <div class="card-title">Au-delà de la musique</div>
+        <div class="card-body">
+          En 2019, il crée la <strong>fondation Vie Sur Nous</strong> pour lutter contre l'exploitation minière en République Démocratique du Congo. Il soutient des projets éducatifs en Afrique. Le <strong>23 janvier 2020</strong>, il lance son propre label indépendant : <strong>TheVie Music</strong>. En <strong>mars 2025</strong>, il devient ambassadeur du <strong>Sidaction</strong>, aux côtés de 18 artistes, pour la lutte contre le VIH/SIDA.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DISCOGRAPHIE ═══ -->
+  <div class="section" id="s-discog">
+    <div class="section-inner">
+      <div class="section-eyebrow">Sa musique</div>
+      <div class="section-title">DISCOGRAPHIE</div>
+
+      <div class="albums-grid" style="margin-bottom:40px;">
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+            <div class="album-cover-text" style="color:#8ab4f8;font-size:28px;">SALLE<br>D'ATTENTE</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">Salle d'Attente</div>
+            <div class="album-year">2014 — Mixtape</div>
+            <div class="album-cert">Gratuit · Underground</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#0d0d0d,#1a1a1a);">
+            <div class="album-cover-text" style="color:#e8c96a;font-size:32px;">BATTERIE<br>FAIBLE</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">Batterie Faible</div>
+            <div class="album-year">2016 — Album #1</div>
+            <div class="album-cert">✦ Disque de Platine</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#0a0015,#1a003a);">
+            <div class="album-cover-text" style="color:#d4aaff;font-size:36px;">IPSÉITÉ</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">Ipséité</div>
+            <div class="album-year">2017 — Album #2</div>
+            <div class="album-cert">✦ Disque de Diamant</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#1a0000,#2d0000);">
+            <div class="album-cover-text" style="color:#f08080;font-size:28px;">LITHO<br>PÉDION</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">Lithopédion</div>
+            <div class="album-year">2018 — Album #3</div>
+            <div class="album-cert">✦ Triple Platine · Victoires 2019</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#0a1a0a,#001a00);">
+            <div class="album-cover-text" style="color:#88e888;font-size:52px;">QALF</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">QALF</div>
+            <div class="album-year">2020 — Album #4</div>
+            <div class="album-cert">✦ Platine · 14M streams J+1</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#0a1a0a,#001505);">
+            <div class="album-cover-text" style="color:#aaffaa;font-size:28px;">QALF<br>INFINITY</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">QALF Infinity</div>
+            <div class="album-year">2021 — Album #4 Extended</div>
+            <div class="album-cert">✦ Platine · +11 titres</div>
+          </div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover" style="background:linear-gradient(135deg,#1a1a00,#2a2a00);">
+            <div class="album-cover-text" style="color:#dddd88;font-size:28px;">VIEUX<br>SONS</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">VIEUX SONS</div>
+            <div class="album-year">Août 2024 — Compilation</div>
+            <div class="album-cert">Morceaux rares & inédits</div>
+          </div>
+        </div>
+        <div class="album-card" style="border-color:rgba(201,168,76,0.4);">
+          <div class="album-cover" style="background:linear-gradient(135deg,#1a1208,#2a1e08);">
+            <div class="album-cover-text" style="color:#e8c96a;font-size:26px;">J'AI<br>MENTI.</div>
+          </div>
+          <div class="album-info">
+            <div class="album-name">J'AI MENTI.</div>
+            <div class="album-year">15 nov. 2024 — Album #5</div>
+            <div class="album-cert">✦ Avant-dernier album</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="section-eyebrow">Détails album par album</div>
+
+      <div class="card">
+        <div class="card-label">2014 · Mixtape gratuite</div>
+        <div class="card-title">Salle d'Attente</div>
+        <div class="card-body">Première release de Damso, distribuée gratuitement. Percée dans l'underground belge. Déjà présent sur la cover : le nom "QALF", annoncé comme projet depuis le début. Inclut des morceaux bruts qui révèlent une plume déjà singulière.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2016 · Album #1 · Universal / 92i</div>
+        <div class="card-title">Batterie Faible — Disque de Platine</div>
+        <div class="card-body">Premier album studio, signé chez Universal après avoir rejoint le label 92i de Booba. Singles : <strong>"Débrouillard"</strong>, <strong>"BruxellesVie"</strong>, <strong>"Périscope"</strong>, <strong>"Paris c'est loin"</strong> feat. Booba (né d'un couplet envoyé sur les réseaux). Révélation nationale. Certifié platine.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2017 · Album #2 · Victoires de la Musique 2018</div>
+        <div class="card-title">Ipséité — Disque de Diamant</div>
+        <div class="card-body"><strong>Ipséité</strong> (terme philosophique = ce qui fait qu'on est soi-même). 14 titres quasi tous certifiés or. <strong>"Macarena"</strong> → premier single de diamant de sa carrière, écrit en une seule nuit. Naissance de son fils Lior en janvier 2017. Victoires de la Musique 2018 — Meilleur album musiques urbaines. Certifié disque de diamant un an et demi après sa sortie.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2018 · Album #3 · Victoires de la Musique 2019</div>
+        <div class="card-title">Lithopédion — Triple Disque de Platine</div>
+        <div class="card-body"><strong>Lithopédion</strong> : terme médical désignant un fœtus calcifié dans l'utérus — un être mort dans un corps vivant. Métaphore d'un sentiment de vide intérieur. Sorti le 15 juin 2018. Victoires de la Musique 2019 — Meilleur album rap. Tournée internationale à guichets fermés avec passage au Palais Omnisports de Paris-Bercy. Polémique autour de l'hymne Belgique (voir section Polémiques).</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2020 · Album #4 · TheVie Music</div>
+        <div class="card-title">QALF — Record mondial Spotify</div>
+        <div class="card-body"><strong>QALF</strong> = "Qui Aime Like Follow" — critique des réseaux sociaux. Sorti le 18 septembre 2020. <strong>14 millions de streams le jour de sortie</strong> — record mondial toutes plateformes confondues. Certifié or en France en 8 jours, puis platine un mois après. Titres phares : <strong>"BXL Zoo"</strong> feat. Hamza (N°1 Belgique), <strong>"Deux toiles de mer"</strong> (hommage à son fils Lior avec sa note vocale), feat. Lous and the Yakuza, Fally Ipupa.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2021 · Extension</div>
+        <div class="card-title">QALF Infinity</div>
+        <div class="card-body">Sorti le 28 avril 2021 avec 11 nouveaux morceaux. Suite musicale de QALF et d'Ipséité. Collaboration iconique avec Angèle — <strong>"Démons"</strong>. Présent également sur l'album d'Angèle. Damso y déclare vouloir acheter un camping-car et "faire le tour du monde".</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Août 2024 · Compilation surprise</div>
+        <div class="card-title">VIEUX SONS</div>
+        <div class="card-body">Sorti le 29 août 2024. 11 anciens morceaux issus de différentes périodes de sa carrière, dont certains de la mixtape Salle d'Attente. Inclut <strong>"Cosmos"</strong>, son tout premier morceau enregistré à l'âge de 16 ans — une pièce inédite très attendue par les fans les plus fidèles.</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(201,168,76,0.3);">
+        <div class="card-label">15 Novembre 2024 · Album #5</div>
+        <div class="card-title">J'AI MENTI. — L'avant-dernier album</div>
+        <div class="card-body">Annoncé comme un EP de 2-3 titres, devient finalement un album de <strong>11 titres</strong>. Initialement, Damso avait annoncé ne rien sortir avant BĒYĀH (son dernier album, mai 2025) — d'où le titre "J'AI MENTI." Un fan croisé dans la rue l'été 2024 l'aurait convaincu de retourner en studio. Sessions d'écoute privées au Siège du Parti Communiste à Paris. Single : <strong>"CHROME"</strong> (clip style Matrix). Feat. : <strong>Angèle</strong> ("Tout tenter"), <strong>Kalash</strong>, <strong>Kalash Criminel</strong>, <strong>Michka</strong> (son grand frère). Styles : amapiano, shatta, électro symphonique, trap drill. Dernier titre : <strong>"DAMSAUTISTE"</strong> — révèle sa possible neurodivergence. Booba critique "Chrome", l'accusant d'être copié sur Cardi B.</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(201,168,76,0.5);">
+        <div class="card-label">Mai 2025 · Album Final annoncé</div>
+        <div class="card-title">BĒYĀH — Son dernier album</div>
+        <div class="card-body">Prévu pour <strong>mai 2025</strong>. Annoncé comme le dernier album de sa carrière. Le nom "Bēyāh" reste mystérieux — Damso n'a pas encore expliqué sa signification. Après ce projet, il compte se retirer progressivement de la scène musicale.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TIMELINE ═══ -->
+  <div class="section" id="s-timeline">
+    <div class="section-inner">
+      <div class="section-eyebrow">Son parcours</div>
+      <div class="section-title">CHRONOLOGIE</div>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">1992</div><div class="tl-text">Naissance de <strong>William Kalubi Mwamba</strong> le 10 mai à Kinshasa, RDC. Père cardiologue, mère sociologue. Famille aisée et cultivée.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2001</div><div class="tl-text">La guerre civile en RDC force la famille à fuir. À 9 ans, William s'installe à <strong>Kraainem</strong>, banlieue de Bruxelles. Double identité qui forgera toute son écriture.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2006</div><div class="tl-text">Commence le rap à 14 ans. Fonde le groupe <strong>O.P.G.</strong> (Original Player Gansta) avec Dolfa, puis Rex, Lio Brown et Duke. Brève tentative d'études en marketing.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2014</div><div class="tl-text">Publie gratuitement sa mixtape <strong>"Salle d'Attente"</strong>. Percée dans l'underground belge. Le nom QALF déjà inscrit sur la pochette.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2015</div><div class="tl-text"><strong>"Poséidon"</strong> sur la mixtape OKLM de Booba → repéré. Rejoint le label <strong>92i</strong>. Featured sur <strong>"Pinocchio"</strong> — révélation nationale. Signature chez Universal Music France.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2016</div><div class="tl-text">Premier album studio <strong>"Batterie Faible"</strong>. <strong>"Paris c'est loin"</strong> feat. Booba. Certifié platine. Début de la notoriété en France.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2017</div><div class="tl-text"><strong>"Ipséité"</strong> → disque de diamant. <strong>"Macarena"</strong> → single de diamant (écrit en une nuit). Naissance de son fils <strong>Lior</strong> en janvier. <strong>Victoires de la Musique 2018</strong> — Meilleur album urbain.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2018</div><div class="tl-text">Mars : Choisi pour composer l'<strong>hymne officiel de l'Équipe de Belgique</strong> (Coupe du Monde Russie). Polémique — contrat rompu sous pression politique. Juin : <strong>"Lithopédion"</strong> → triple platine. Concert à <strong>Bercy</strong>. <strong>Victoires de la Musique 2019</strong>.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2019</div><div class="tl-text">Clash avec Booba. <strong>"Tricheur"</strong> feat. Nekfeu → single de diamant. Crée la fondation <strong>"Vie Sur Nous"</strong>. Mère dans le coma → retard de QALF. Supprime tous ses posts Instagram.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2020</div><div class="tl-text">23 jan. : Crée son label <strong>TheVie Music</strong>. Mars : hommage à sa tante décédée du Covid. Sept. : <strong>"QALF"</strong> → 14M streams le jour J, record mondial Spotify. Certifié or en 8 jours.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2021</div><div class="tl-text"><strong>"QALF Infinity"</strong> (+11 titres). Collaboration avec <strong>Angèle</strong> — "Démons". Annonce son rêve : acheter un camping-car studio itinérant.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2022</div><div class="tl-text">Collabs : Aya Nakamura ("Dégaine"), Selah Sue, Disiz, Gazo, Kobo. En couple avec <strong>Didi-Stone</strong>. Annonce une pause musicale.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2023</div><div class="tl-text">Août : Achète son <strong>camping-car Iveco</strong> — rêve exaucé. Déclare en concert : <em>"Je pars en camping-car, on se capte en 2025"</em>.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2024</div><div class="tl-text">Août : Compilation <strong>"VIEUX SONS"</strong> avec "Cosmos" (son tout 1er son à 16 ans). Novembre : Album surprise <strong>"J'AI MENTI."</strong> — 11 titres. Révèle sa possible neurodivergence avec "DAMSAUTISTE".</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2025</div><div class="tl-text">Officialise son couple avec <strong>Milla Lapidus</strong>. Devient ambassadeur du <strong>Sidaction</strong>. Prépare <strong>BĒYĀH</strong> — annoncé comme son tout dernier album (mai 2025).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ COLLABS ═══ -->
+  <div class="section" id="s-collabs">
+    <div class="section-inner">
+      <div class="section-eyebrow">Featurings & Projets</div>
+      <div class="section-title">COLLABORATIONS</div>
+
+      <div class="collab-grid">
+        <div class="card"><div class="card-label">Mentor devenu adversaire</div><div class="card-title">Booba</div><div class="card-body">"Pinocchio" (2015) — révélation. "Paris c'est loin" (2016). Clash 2019. Critique "Chrome" en 2024 (accusé d'être copié sur Cardi B).</div></div>
+        <div class="card"><div class="card-label">Classique du rap FR</div><div class="card-title">Nekfeu</div><div class="card-body">"Tricheur" (2019) sur "Les Étoiles vagabondes" — certifié <strong>single de diamant</strong>. Deux stylistes majeurs du rap francophone réunis.</div></div>
+        <div class="card"><div class="card-label">Complicité belge</div><div class="card-title">Angèle</div><div class="card-body">"Démons" (2021), "Silence" (2021) — perles de la musique belge. "Tout tenter" sur J'AI MENTI (2024). Amis et complices depuis longtemps.</div></div>
+        <div class="card"><div class="card-label">Rap belge uni</div><div class="card-title">Hamza</div><div class="card-body">"God Bless" (2019). "BXL Zoo" (2020) — <strong>N°1 en Belgique</strong>. Deux figures majeures du rap belge moderne.</div></div>
+        <div class="card"><div class="card-label">Récurrent</div><div class="card-title">Kalash</div><div class="card-body">"Mwaka Moon" (2017) — succès massif France/Belgique. "Alpha" sur J'AI MENTI (2024). Collaboration qui dure dans le temps.</div></div>
+        <div class="card"><div class="card-label">Crossover rap-chanson</div><div class="card-title">Orelsan</div><div class="card-body">"Rêves bizarres" (2018) sur la réédition de "La Fête est Finie". Deux poètes du rap FR aux univers distincts mais complémentaires.</div></div>
+        <div class="card"><div class="card-label">Crossover pop afro</div><div class="card-title">Aya Nakamura</div><div class="card-body">"Dégaine" (2022). Mélange inattendu et explosif entre son univers sombre et la pop afro d'Aya.</div></div>
+        <div class="card"><div class="card-label">Racines congolaises</div><div class="card-title">Fally Ipupa</div><div class="card-body">Featured sur QALF (2020). Hommage aux origines congolaises communes. Deux artistes belgo-congolais qui se retrouvent.</div></div>
+        <div class="card"><div class="card-label">Soul / Belgique</div><div class="card-title">Selah Sue</div><div class="card-body">"Wanted You To Know" (2022). Rencontre entre le rap obscur de Damso et la soul de Selah Sue.</div></div>
+        <div class="card"><div class="card-label">Nouvelle génération</div><div class="card-title">Gazo</div><div class="card-body">"Bodies" (2022). Damso s'associe à l'une des nouvelles stars du rap FR, confirmant son influence sur la génération suivante.</div></div>
+        <div class="card"><div class="card-label">Street / FR</div><div class="card-title">Lacrim</div><div class="card-body">"Noche" (2017) sur "Force & Honneur". Collaboration aux accents street entre deux rappeurs aux univers sombres.</div></div>
+        <div class="card"><div class="card-label">Avant-garde</div><div class="card-title">Vald</div><div class="card-body">"Vitrine" (2017) sur "Agartha". Deux rappeurs iconoclastes qui partagent un goût pour l'expérimentation et l'absurde.</div></div>
+      </div>
+
+      <hr class="divider">
+      <div class="card">
+        <div class="card-label">Talent caché</div>
+        <div class="card-title">Il écrit pour d'autres artistes</div>
+        <div class="card-body">Damso compose et écrit pour des artistes variés sans toujours l'afficher publiquement : <strong>Angèle, Kendji Girac, Louane, Shay, Shayet</strong>. Une facette rare et méconnue de son talent qui prouve que sa plume dépasse largement les frontières du rap.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECRETS ═══ -->
+  <div class="section" id="s-secrets">
+    <div class="section-inner">
+      <div class="section-eyebrow">Ce que peu de gens savent</div>
+      <div class="section-title">INFOS CACHÉES</div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Vision totale</div>
+        <div class="secret-title">Ses albums planifiés depuis le lycée</div>
+        <div class="secret-body">Damso a confié au journal <strong>Libération</strong> que les titres de tous ses albums avaient été pensés et planifiés avant même le début de sa carrière, dès la fin de ses études secondaires. Chaque titre (Batterie Faible, Ipséité, Lithopédion, QALF, J'AI MENTI., BĒYĀH) représente une étape psychologique précise qu'il avait anticipée : face au succès, à l'évolution de ses relations, à l'identité, à la nécessité de préserver son moi profond. C'est une vision artistique totale et planifiée sur plus de 10 ans.</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Neurodivergence</div>
+        <div class="secret-title">DAMSAUTISTE — la révélation personnelle</div>
+        <div class="secret-body">Sur J'AI MENTI (2024), le dernier titre <strong>"DAMSAUTISTE"</strong> (jeu de mots entre "Damso" et "autiste") est la première fois que le rappeur évoque publiquement sa possible neurodivergence, une introspection qu'il dit avoir depuis l'enfance. La RTBF compare ce geste à celui de Stromae lorsqu'il avait parlé de ses idées suicidaires au JT de TF1 — le témoignage d'une personnalité publique sur sa santé mentale réduit la stigmatisation et encourage d'autres à consulter. Le site d'analyse <strong>Les Jours</strong> voit dans "DAMSAUTISTE" un exemple d'"autodiagnostic libérateur" dans la musique contemporaine, dans la lignée de David Byrne (Talking Heads).</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Scandale politique</div>
+        <div class="secret-title">L'hymne de Belgique retiré à la Coupe du Monde 2018</div>
+        <div class="secret-body">En mars 2018, la <strong>RBFA (Fédération Royale Belge de Football)</strong> confie à Damso la composition de l'hymne officiel de l'Équipe Nationale de Belgique pour la Coupe du Monde en Russie. Une polémique éclate immédiatement — organisations féministes et partis politiques s'insurgent contre ses textes jugés sexistes. Le <strong>vice-Premier ministre libéral flamand Alexander De Croo</strong> déclare : <em>"On peut chanter ce qu'on veut, mais pas marquer des buts de cette façon."</em> Dans la nuit du 8 au 9 mars 2018, la RBFA annonce que la collaboration est <strong>rompue "de commun accord"</strong>. La Belgique disputera le Mondial sans hymne officiel. Damso répond que le débat ne portait pas sur la chanson mais sur sa réputation supposée de misogyne, soulignant qu'on ne lui a jamais demandé ce qu'il pensait réellement des femmes.</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Rêve exaucé</div>
+        <div class="secret-title">Le camping-car studio itinérant</div>
+        <div class="secret-body">Depuis 2019, Damso rêve publiquement d'acheter un camping-car pour en faire un studio itinérant et "faire le tour du monde en vivant dedans". Il le répète en 2020 (QALF), en 2021 (QALF Infinity), en 2022. En <strong>août 2023</strong>, il achète enfin son <strong>Iveco</strong>. Lors de son dernier festival de l'été 2023, il déclare à la foule : <em>"Je vous souhaite le meilleur. Je pars en camping-car. Merci beaucoup. On se capte en 2025."</em> C'est depuis ce camping-car, après avoir croisé un fan dans la rue, qu'est né J'AI MENTI.</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Symboles</div>
+        <div class="secret-title">La signification cachée de ses titres d'albums</div>
+        <div class="secret-body">
+          — <strong>Batterie Faible</strong> : l'artiste au début de sa course, qui commence à épuiser ses ressources intérieures.<br>
+          — <strong>Ipséité</strong> (terme philosophique) : ce qui fait qu'un être est lui-même, son identité propre et irréductible.<br>
+          — <strong>Lithopédion</strong> (terme médical) : fœtus calcifié, mort mais conservé dans l'utérus. Métaphore d'un être mort intérieurement dans un corps vivant — vide et détachement du monde.<br>
+          — <strong>QALF</strong> : "Qui Aime Like Follow" — critique acérée de la culture des réseaux sociaux et de la validation numérique.<br>
+          — <strong>J'AI MENTI.</strong> : auto-dérision — il avait promis de ne rien sortir avant BĒYĀH.<br>
+          — <strong>BĒYĀH</strong> : signification non encore révélée.
+        </div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Genèse</div>
+        <div class="secret-title">"Macarena" écrite en une nuit</div>
+        <div class="secret-body">L'un de ses plus grands hits — et son premier single de diamant — <strong>"Macarena"</strong> a été composée en une seule nuit. Ce titre reste parmi les plus streamés de sa carrière et de l'histoire du rap francophone. Une spontanéité créative qui cache en réalité un travail intense et méthodique sur son écriture.</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">Vie privée</div>
+        <div class="secret-title">Milla Lapidus — une compagne de haute société</div>
+        <div class="secret-body">En 2025, Damso officialise sa relation avec <strong>Milla Lapidus</strong>, fille du couturier français <strong>Olivier Lapidus</strong> et petite-fille de <strong>Véronique Zuber</strong>, couronnée Miss France en 1955. Un couple improbable qui mêle le monde du rap belgo-congolais à l'aristocratie de la mode française.</div>
+      </div>
+
+      <div class="secret-card">
+        <div class="secret-badge">J+1 au cinéma</div>
+        <div class="secret-title">Un projet cinématographique annoncé</div>
+        <div class="secret-body">Damso a annoncé un projet de film via ses réseaux sociaux, accompagné d'une bande-annonce officielle et d'une affiche. Les détails du contenu restent volontairement flous. Cela confirme que son univers artistique cherche à transcender le cadre musical pour toucher à l'image et à la narration visuelle.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PHOTOS ═══ -->
+  <div class="section" id="s-photos">
+    <div class="section-inner">
+      <div class="section-eyebrow">Visuels</div>
+      <div class="section-title">GALERIE</div>
+
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Damso_-_Festival_La_Route_du_Rock_-_2019_%28cropped%29.jpg/1200px-Damso_-_Festival_La_Route_du_Rock_-_2019_%28cropped%29.jpg"
+        class="photo-hero" alt="Damso — La Route du Rock 2019"
+        onerror="this.style.background='var(--bg3)';this.alt='Photo indisponible'" />
+
+      <div class="photo-grid">
+        <div class="photo-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Damso_au_festival_de_Dour_2018_%28cropped%29.jpg/600px-Damso_au_festival_de_Dour_2018_%28cropped%29.jpg"
+            alt="Damso Festival de Dour 2018"
+            onerror="this.parentNode.innerHTML='<div class=\'photo-placeholder-inner\'><div style=\'font-size:32px;color:var(--gold)\'>DOUR</div><div style=\'font-size:11px;color:var(--text3);margin-top:6px;\'>Festival 2018</div></div>'" />
+        </div>
+        <div class="photo-item" style="background:linear-gradient(135deg,#0a1a0a,#001a00);">
+          <div class="photo-placeholder-inner">
+            <div style="font-size:48px;color:#88e888;letter-spacing:-2px;">QALF</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:2px;">ALBUM 2020</div>
+            <div style="font-size:10px;color:var(--gold);margin-top:4px;">14M STREAMS J+1</div>
+          </div>
+        </div>
+        <div class="photo-item" style="background:linear-gradient(135deg,#0a0015,#1a003a);">
+          <div class="photo-placeholder-inner">
+            <div style="font-size:40px;color:#d4aaff;letter-spacing:-1px;">IPSÉITÉ</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:2px;">ALBUM 2017</div>
+            <div style="font-size:10px;color:var(--gold);margin-top:4px;">DISQUE DE DIAMANT</div>
+          </div>
+        </div>
+        <div class="photo-item" style="background:linear-gradient(135deg,#1a0000,#2d0000);">
+          <div class="photo-placeholder-inner">
+            <div style="font-size:28px;color:#f08080;">LITHOPÉDION</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:2px;">ALBUM 2018</div>
+            <div style="font-size:10px;color:var(--gold);margin-top:4px;">TRIPLE PLATINE</div>
+          </div>
+        </div>
+        <div class="photo-item" style="background:linear-gradient(135deg,#1a1208,#2a1e08);">
+          <div class="photo-placeholder-inner">
+            <div style="font-size:28px;color:var(--gold);letter-spacing:-1px;">J'AI MENTI.</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:2px;">ALBUM 2024</div>
+            <div style="font-size:10px;color:var(--gold);margin-top:4px;">AVANT-DERNIER</div>
+          </div>
+        </div>
+        <div class="photo-item" style="background:linear-gradient(135deg,#0d0d0d,#1a1a1a);">
+          <div class="photo-placeholder-inner">
+            <div style="font-size:36px;color:var(--text2);letter-spacing:2px;">BĒYĀH</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:2px;">MAI 2025</div>
+            <div style="font-size:10px;color:var(--gold);margin-top:4px;">DERNIER ALBUM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-label">Note</div>
+        <div class="card-body">Les photos de Damso sont soumises aux droits d'image. Pour voir davantage de photos officielles, consulte son compte Instagram ou les pages presse de <strong>Universal Music France</strong> et <strong>TheVie Music</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ POLÉMIQUES ═══ -->
+  <div class="section" id="s-polémiques">
+    <div class="section-inner">
+      <div class="section-eyebrow">Controverses & Clashs</div>
+      <div class="section-title">POLÉMIQUES</div>
+
+      <div class="card" style="border-left:3px solid var(--red);">
+        <div class="card-label" style="color:var(--red);">2018 · Polémique majeure</div>
+        <div class="card-title">L'hymne Belgique / Coupe du Monde</div>
+        <div class="card-body">La RBFA lui confie l'hymne officiel belge pour le Mondial 2018. Sous pression de groupes féministes et de politiques (dont le vice-PM Alexander De Croo), la collaboration est rompue dans la nuit du 8-9 mars 2018. La Belgique joue le Mondial sans hymne officiel. Damso répond que le débat portait sur sa réputation, pas sur sa musique, et que personne ne lui a jamais demandé ce qu'il pensait vraiment des femmes. Il estime que la société empêche les femmes de faire des choix libres — ce qui génère un sentiment d'oppression.</div>
+      </div>
+
+      <div class="card" style="border-left:3px solid #e8a020;">
+        <div class="card-label" style="color:#e8a020;">2019 · Clash avec son mentor</div>
+        <div class="card-title">Booba vs Damso</div>
+        <div class="card-body">Après la sortie de "Tricheur" feat. Nekfeu, Booba croit y entendre des piques à son égard et attaque Damso sur les réseaux. Damso reste impassible et ne répond pas directement. En 2024, Booba remet le feu en accusant "Chrome" d'être un "copié-collé" d'un titre de Cardi B. Les deux hommes ne sont plus officiellement en bons termes depuis 2019.</div>
+      </div>
+
+      <div class="card" style="border-left:3px solid #888;">
+        <div class="card-label">Récurrent · Polémique de fond</div>
+        <div class="card-title">Accusation de misogynie</div>
+        <div class="card-body">Damso est régulièrement attaqué pour ses textes — paroles crues sur les femmes, langage explicite, représentations jugées dégradantes. Des organisations féministes et certains élus politiques belges et français ont relayé ces critiques à plusieurs reprises. Sur J'AI MENTI (2024), plusieurs critiques musicaux notent que les "grossièretés misogynes" persistent sans toujours servir un propos artistique clair. Damso défend la liberté artistique et la complexité des textes. Ce débat reste ouvert et polarisé.</div>
+      </div>
+
+      <div class="card" style="border-left:3px solid #888;">
+        <div class="card-label">2019 · Clash mineur</div>
+        <div class="card-title">La Fouine vs Damso</div>
+        <div class="card-body">Suite à une punchline de Damso dans le morceau "God Bless" feat. Hamza, La Fouine se sent visée et clache Damso sur Twitter. L'accrochage reste court — La Fouine revient à de meilleurs sentiments peu après et l'incident est rapidement oublié.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">2024 · Auto-révélation</div>
+        <div class="card-title">DAMSAUTISTE — neurodivergence et controverse</div>
+        <div class="card-body">Le titre "DAMSAUTISTE" et la révélation de sa possible neurodivergence (autisme) génèrent un débat médiatique en France et en Belgique. Certains saluent le courage de la démarche, d'autres questionnent le sérieux d'un "autodiagnostic" via une chanson. La RTBF et Les Jours analysent l'impact de ce type de témoignage de célébrités sur la santé mentale du public.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /site -->
+
+<script>
+  function login() {
+    const val = document.getElementById('pwd').value.trim().toLowerCase().replace(/\s/g,'');
+    const ok = ['william1992'];
+    const err = document.getElementById('err');
+    if (ok.includes(val)) {
+      document.getElementById('login').style.opacity = '0';
+      document.getElementById('login').style.transition = 'opacity 0.6s';
+      setTimeout(() => {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('site').style.display = 'block';
+      }, 600);
+    } else {
+      err.textContent = val === '' ? 'Saisis le mot de passe.' : 'Mot de passe incorrect. Réessaie.';
+      document.getElementById('pwd').value = '';
+      document.getElementById('pwd').focus();
+      document.getElementById('pwd').style.borderColor = '#c0392b';
+      setTimeout(() => document.getElementById('pwd').style.borderColor = '', 1500);
+    }
+  }
+
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('s-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
